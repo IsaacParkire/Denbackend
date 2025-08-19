@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
-    #'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'rest_framework.authtoken',  # <-- Added for dj_rest_auth compatibility
     'corsheaders',
     'django_filters',
@@ -142,7 +142,7 @@ AUTH_USER_MODEL = 'accounts.User'
 # REST Framework Configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -157,28 +157,28 @@ REST_FRAMEWORK = {
 }
 
 # JWT Configuration (COMMENTED OUT)
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # 1 day access token
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=365),  # 1 year refresh token
-#     'ROTATE_REFRESH_TOKENS': True,
-#     'BLACKLIST_AFTER_ROTATION': True,
-#     'UPDATE_LAST_LOGIN': True,
-#     'ALGORITHM': 'HS256',
-#     'SIGNING_KEY': SECRET_KEY,
-#     'VERIFYING_KEY': None,
-#     'AUDIENCE': None,
-#     'ISSUER': None,
-#     'JWK_URL': None,
-#     'LEEWAY': 0,
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-#     'USER_ID_FIELD': 'id',
-#     'USER_ID_CLAIM': 'user_id',
-#     #'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-#     #'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-#     'TOKEN_TYPE_CLAIM': 'token_type',
-#     'JTI_CLAIM': 'jti',
-# }
+SIMPLE_JWT = {
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # 1 day access token
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=365),  # 1 year refresh token
+     'ROTATE_REFRESH_TOKENS': True,
+     'BLACKLIST_AFTER_ROTATION': True,
+     'UPDATE_LAST_LOGIN': True,
+     'ALGORITHM': 'HS256',
+     'SIGNING_KEY': SECRET_KEY,
+     'VERIFYING_KEY': None,
+     'AUDIENCE': None,
+     'ISSUER': None,
+     'JWK_URL': None,
+     'LEEWAY': 0,
+     'AUTH_HEADER_TYPES': ('Bearer',),
+     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+     'USER_ID_FIELD': 'id',
+     'USER_ID_CLAIM': 'user_id',
+     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+     'TOKEN_TYPE_CLAIM': 'token_type',
+     'JTI_CLAIM': 'jti',
+ }
 
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
