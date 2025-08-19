@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
-    'rest_framework_simplejwt',
+    #'rest_framework_simplejwt',
     'rest_framework.authtoken',  # <-- Added for dj_rest_auth compatibility
     'corsheaders',
     'django_filters',
