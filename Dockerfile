@@ -1,8 +1,11 @@
 FROM python:3.10.13-slim-bullseye
+
 WORKDIR /app
 
-# install setuptools first
-RUN pip install --no-cache-dir setuptools
+# --- ADD THIS BLOCK ---
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir setuptools wheel
+# ----------------------
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
