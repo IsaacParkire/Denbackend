@@ -1,30 +1,13 @@
-# Dockerfile for LaydiesDen Django Backend
-FROM python:3.12-slim
-
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Set work directory
+FROM python:3.10.13-slim-bullseye
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y build-essential libpq-dev && \
-    rm -rf /var/lib/apt/lists/*
+# install setuptools first
+RUN pip install --no-cache-dir setuptools
 
-# Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
-COPY . /app/
+COPY . .
+RUN python manage.py collectstatic --noinput
 
-# Collect static files (optional, if using whitenoise/staticfiles)
-# RUN python manage.py collectstatic --noinput
-
-# Expose port (default Django port)
-EXPOSE 8000
-
-# Start server
 CMD ["gunicorn", "laydies_backend.wsgi:application", "--bind", "0.0.0.0:8000"]
