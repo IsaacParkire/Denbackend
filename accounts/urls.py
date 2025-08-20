@@ -13,7 +13,8 @@ from .views import (
     membership_status,
     CookieLoginView,
     CookieTokenRefreshView,
-    create_admin
+    create_admin,
+    reset_admin_password
 )
 from .health import health_check
 from dj_rest_auth.registration.views import SocialLoginView
@@ -49,4 +50,7 @@ urlpatterns = [
 
     # Admin creation endpoint
     path('create-admin/', create_admin, name='create_admin'),
+
+    # Admin password reset endpoint
+    path('reset-admin-password/', reset_admin_password, name='reset_admin_password'),
 ]
