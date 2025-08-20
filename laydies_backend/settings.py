@@ -2,6 +2,7 @@ from pathlib import Path
 from decouple import config
 from datetime import timedelta
 import dj_database_url
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,26 +82,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'laydies_backend.wsgi.application'
 
-# Database
-# Use PostgreSQL for production
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'laydiesdendb',     # database name
-        'USER': 'laydiesden',       # your db user
-        'PASSWORD': '1234park',     # your db password
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Database Configuration for Render
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
-
-# For development/testing, you can use SQLite by uncommenting below
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+else:
+    # Fallback to your local database (for development)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'laydiesdendb'),
+            'USER': os.getenv('DB_USER', 'laydiesden'),
+            'PASSWORD': os.getenv('DB_PASSWORD', '1234park'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
