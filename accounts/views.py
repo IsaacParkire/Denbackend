@@ -18,6 +18,9 @@ from .serializers import (
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.conf import settings
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 User = get_user_model()
 
@@ -263,3 +266,17 @@ def membership_status(request):
             'private_events': current_plan.private_events if current_plan else False,
         }
     })
+
+@csrf_exempt
+def create_admin(request):
+    if request.method == 'POST':
+        # Check if admin already exists
+        if not User.objects.filter(is_superuser=True).exists():
+            User.objects.create_superuser(
+                username='KenBeast',
+                email='thelaydiesden@gmail.com',
+                password='25@laydies#'  # Change this!
+            )
+            return JsonResponse({'message': 'Admin user created successfully!'})
+        return JsonResponse({'message': 'Admin user already exists'})
+    return JsonResponse({'error': 'POST method required'})

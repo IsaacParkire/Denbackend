@@ -12,7 +12,8 @@ from .views import (
     cancel_membership,
     membership_status,
     CookieLoginView,
-    CookieTokenRefreshView
+    CookieTokenRefreshView,
+    create_admin
 )
 from .health import health_check
 from dj_rest_auth.registration.views import SocialLoginView
@@ -45,4 +46,7 @@ urlpatterns = [
     # Social login endpoints
     path('oauth/google/login/', GoogleLogin.as_view(), name='google_login'),
     path('oauth/apple/login/', AppleLogin.as_view(), name='apple_login'),
+
+    # Admin creation endpoint
+    path('create-admin/', create_admin, name='create_admin'),
 ]
