@@ -1,7 +1,12 @@
 from django.urls import path
 from .views import (
-    RegisterView,
-    LoginView,
+    # REMOVE these JWT views (they don't exist anymore):
+    # RegisterView,
+    # LoginView,
+    # CookieLoginView, 
+    # CookieTokenRefreshView,
+    
+    # KEEP these views:
     ProfileView,
     UserProfileUpdateView,
     ChangePasswordView,
@@ -11,8 +16,6 @@ from .views import (
     upgrade_membership,
     cancel_membership,
     membership_status,
-    CookieLoginView,
-    CookieTokenRefreshView,
     create_admin,
     reset_admin_password
 )
@@ -29,9 +32,12 @@ class AppleLogin(SocialLoginView):
 
 urlpatterns = [
     path('health/', health_check, name='health-check'),
-    path('register/', RegisterView.as_view(), name='user-register'),
-    path('login/', CookieLoginView.as_view(), name='user-login'),
-    path('token/refresh/', CookieTokenRefreshView.as_view(), name='token-refresh'),
+    
+    # REMOVE these JWT routes (commented out):
+    # path('register/', RegisterView.as_view(), name='user-register'),
+    # path('login/', CookieLoginView.as_view(), name='user-login'),
+    # path('token/refresh/', CookieTokenRefreshView.as_view(), name='token-refresh'),
+    
     path('logout/', logout_view, name='user-logout'),
     path('profile/', ProfileView.as_view(), name='user-profile'),
     path('profile/update/', UserProfileUpdateView.as_view(), name='user-profile-update'),
