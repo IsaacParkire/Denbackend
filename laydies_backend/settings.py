@@ -188,7 +188,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://isaacparkire.github.io/Ladiesden"
+    "https://isaacparkire.github.io"  # No path, just domain
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -244,6 +244,8 @@ DJREST_AUTH_TOKEN_MODEL = None
 TOKEN_MODEL = None
 
 # Allauth/dj_rest_auth settings for email-only user model
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
