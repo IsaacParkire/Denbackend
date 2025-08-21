@@ -46,6 +46,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.apple',
 
+    # Cloudinary
+    'cloudinary',
+    'cloudinary_storage',
+
     # Local apps
     'accounts',
     'products',
@@ -140,7 +144,19 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default="dckkibumo"),
+    "API_KEY": config("CLOUDINARY_API_KEY", default="321665797713162"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET", default="dOCW3oJj9xtRivyBNqeJ0qSO7S8"),
+}
+
+# Cloudinary for media files
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# If you also want static files on Cloudinary (optional, usually keep static on whitenoise):
+# STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
+CLOUDINARY_SECURE = True
+
+MEDIA_URL = '/media/'  # Not heavily used since Cloudinary gives its own URL
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -198,14 +214,13 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# If you use CSRF for POST requests:
 CSRF_TRUSTED_ORIGINS = [
     "https://isaacparkire.github.io",
     "https://denbackend.onrender.com",
 ]
 
 # -------------------------------------------------
-# EMAIL (can switch to SMTP later)
+# EMAIL
 # -------------------------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')
