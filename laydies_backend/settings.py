@@ -4,18 +4,24 @@ from datetime import timedelta
 import dj_database_url
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# -------------------------------------------------
+# BASE SETTINGS
+# -------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-your-secret-key-here')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*']
+ALLOWED_HOSTS = [
+    'denbackend.onrender.com',  # Your backend on Render
+    'localhost',
+    '127.0.0.1',
+]
 
-# Application definition
+# -------------------------------------------------
+# APPLICATIONS
+# -------------------------------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -23,14 +29,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
-    'rest_framework.authtoken',  # <-- Added for dj_rest_auth compatibility
+    'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
-    # Social auth
+
+    # Auth + social
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth',
@@ -38,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.apple',
-    
+
     # Local apps
     'accounts',
     'products',
@@ -49,6 +56,9 @@ INSTALLED_APPS = [
     'appointments',
 ]
 
+# -------------------------------------------------
+# MIDDLEWARE
+# -------------------------------------------------
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -59,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # <-- Added for allauth
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'laydies_backend.urls'
@@ -82,7 +92,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'laydies_backend.wsgi.application'
 
-# Database Configuration for Render
+# -------------------------------------------------
+# DATABASE
+# -------------------------------------------------
 if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
@@ -92,7 +104,6 @@ if os.getenv('DATABASE_URL'):
         )
     }
 else:
-    # Fallback to your local database (for development)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -104,44 +115,44 @@ else:
         }
     }
 
-# Password validation
+# -------------------------------------------------
+# PASSWORD VALIDATION
+# -------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# -------------------------------------------------
+# INTERNATIONALIZATION
+# -------------------------------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# -------------------------------------------------
+# STATIC & MEDIA FILES
+# -------------------------------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custom User Model
+# -------------------------------------------------
+# CUSTOM USER
+# -------------------------------------------------
 AUTH_USER_MODEL = 'accounts.User'
 
-# REST Framework Configuration
+# -------------------------------------------------
+# REST FRAMEWORK
+# -------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -158,65 +169,44 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# JWT Configuration (COMMENTED OUT)
+# -------------------------------------------------
+# JWT
+# -------------------------------------------------
 SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),  # 1 day access token
-     'REFRESH_TOKEN_LIFETIME': timedelta(days=365),  # 1 year refresh token
-     'ROTATE_REFRESH_TOKENS': True,
-     'BLACKLIST_AFTER_ROTATION': True,
-     'UPDATE_LAST_LOGIN': True,
-     'ALGORITHM': 'HS256',
-     'SIGNING_KEY': SECRET_KEY,
-     'VERIFYING_KEY': None,
-     'AUDIENCE': None,
-     'ISSUER': None,
-     'JWK_URL': None,
-     'LEEWAY': 0,
-     'AUTH_HEADER_TYPES': ('Bearer',),
-     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-     'USER_ID_FIELD': 'id',
-     'USER_ID_CLAIM': 'user_id',
-     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-     'TOKEN_TYPE_CLAIM': 'token_type',
-     'JTI_CLAIM': 'jti',
- }
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=365),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'JTI_CLAIM': 'jti',
+}
 
-# CORS Configuration
+# -------------------------------------------------
+# CORS & CSRF (for GitHub Pages frontend)
+# -------------------------------------------------
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://isaacparkire.github.io"  # No path, just domain
+    "https://isaacparkire.github.io",  # Your GitHub Pages site
 ]
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = DEBUG  # Only in development
 
-# Additional CORS headers for debugging
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
+# If you use CSRF for POST requests:
+CSRF_TRUSTED_ORIGINS = [
+    "https://isaacparkire.github.io",
+    "https://denbackend.onrender.com",
 ]
 
-CORS_ALLOWED_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-
-# Email Configuration (for production)
+# -------------------------------------------------
+# EMAIL (can switch to SMTP later)
+# -------------------------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
@@ -225,7 +215,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@laydiesden.com')
 
-# Social Authentication Configuration
+# -------------------------------------------------
+# AUTHENTICATION BACKENDS
+# -------------------------------------------------
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -233,9 +225,6 @@ AUTHENTICATION_BACKENDS = (
 
 SITE_ID = 1
 
-# REST_USE_JWT = True  # COMMENTED OUT
-
-# dj-rest-auth settings
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'accounts.serializers.UserSerializer',
 }
@@ -243,15 +232,10 @@ REST_AUTH_SERIALIZERS = {
 DJREST_AUTH_TOKEN_MODEL = None
 TOKEN_MODEL = None
 
-# Allauth/dj_rest_auth settings for email-only user model
+# Email-only authentication with allauth
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-
-# at the bottom:
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
