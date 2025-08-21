@@ -16,22 +16,21 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
 
-    # --- AUTO CREATE SUPERUSER (Render free plan fix) ---
+    # --- AUTO CREATE SUPERUSER ---
     import django
     django.setup()
     from django.contrib.auth import get_user_model
 
     User = get_user_model()
-    username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
     email = os.environ.get("DJANGO_SUPERUSER_EMAIL")
     password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
 
-    if username and email and password:
-        if not User.objects.filter(username=username).exists():
-            print("Creating superuser...")
-            User.objects.create_superuser(username=username, email=email, password=password)
+    if email and password:
+        if not User.objects.filter(email=email).exists():
+            print("Creating superuser with email:", email)
+            User.objects.create_superuser(email=email, password=password)
         else:
-            print("Superuser already exists")
+            print("Superuser already exists with email:", email)
 
     # --- Continue normal Django execution ---
     execute_from_command_line(sys.argv)
