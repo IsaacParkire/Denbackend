@@ -144,17 +144,6 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default="dckkibumo"),
-    "API_KEY": config("CLOUDINARY_API_KEY", default="321665797713162"),
-    "API_SECRET": config("CLOUDINARY_API_SECRET", default="dOCW3oJj9xtRivyBNqeJ0qSO7S8"),
-}
-
-# Cloudinary for media files
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-# If you also want static files on Cloudinary (optional, usually keep static on whitenoise):
-# STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
-CLOUDINARY_SECURE = True
 
 MEDIA_URL = '/media/'  # Not heavily used since Cloudinary gives its own URL
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -254,3 +243,15 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+
+# -------------------------------------------------
+# CLOUDINARY STORAGE
+# -------------------------------------------------
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default="dckkibumo"),
+    "API_KEY": config("CLOUDINARY_API_KEY", default="321665797713162"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET", default="dOCW3oJj9xtRivyBNqeJ0qSO7S8"),
+}
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+CLOUDINARY_SECURE = True
