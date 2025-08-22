@@ -248,10 +248,11 @@ ACCOUNT_EMAIL_REQUIRED = True
 # CLOUDINARY STORAGE
 # -------------------------------------------------
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME", default="dckkibumo"),
-    "API_KEY": config("CLOUDINARY_API_KEY", default="321665797713162"),
-    "API_SECRET": config("CLOUDINARY_API_SECRET", default="dOCW3oJj9xtRivyBNqeJ0qSO7S8"),
+    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
+
 
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 CLOUDINARY_SECURE = True
