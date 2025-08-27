@@ -20,20 +20,34 @@ from services.models import Therapist, Service
 
 
 class BookingListView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+    """
+    - GET: Authenticated users see their bookings.
+    - POST: Both guests and authenticated users can create bookings.
+    """
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status', 'service', 'therapist', 'booking_date']
     search_fields = ['service__name', 'therapist__user__first_name', 'therapist__user__last_name']
     ordering_fields = ['booking_date', 'booking_time', 'created_at']
     ordering = ['-booking_date', '-booking_time']
 
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return [IsAuthenticated()]
+        return []  # Allow anyone to POST (create booking)
+
     def get_queryset(self):
-        return Booking.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Booking.objects.filter(user=self.request.user)
+        return Booking.objects.none()
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateBookingSerializer
         return BookingSerializer
+
+    def perform_create(self, serializer):
+        user = self.request.user if self.request.user.is_authenticated else None
+        serializer.save(user=user)
 
 
 class BookingDetailView(generics.RetrieveUpdateDestroyAPIView):
