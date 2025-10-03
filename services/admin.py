@@ -32,15 +32,15 @@ class TherapistAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ['name', 'category', 'price', 'duration', 'is_active', 'is_featured']
-    list_filter = ['category', 'duration', 'is_active', 'is_featured', 'created_at']
+    list_display = ['name', 'category', 'level', 'price', 'duration', 'is_active', 'is_featured']
+    list_filter = ['category', 'level', 'duration', 'is_active', 'is_featured', 'created_at']
     search_fields = ['name', 'description', 'short_description']
     filter_horizontal = ['therapists']
     list_editable = ['is_active', 'is_featured']
     
     fieldsets = (
         ('Basic Information', {
-            'fields': ('name', 'category', 'short_description', 'description')
+            'fields': ('name', 'category', 'level', 'short_description', 'description')
         }),
         ('Pricing & Duration', {
             'fields': ('price', 'duration')

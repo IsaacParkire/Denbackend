@@ -63,6 +63,8 @@ class Service(models.Model):
     preparation_notes = models.TextField(blank=True, help_text="What clients should know before booking")
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)
+    level = models.PositiveIntegerField(blank=True, null=True, help_text="Massage level (1-4) for Her Touch services")
+    page = models.CharField(max_length=50, blank=True, null=True, help_text="Source page for this service (e.g. 'her_touch', 'her_strength')")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

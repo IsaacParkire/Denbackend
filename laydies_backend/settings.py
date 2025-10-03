@@ -99,25 +99,16 @@ WSGI_APPLICATION = 'laydies_backend.wsgi.application'
 # -------------------------------------------------
 # DATABASE
 # -------------------------------------------------
-if os.getenv('DATABASE_URL'):
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.getenv('DATABASE_URL'),
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME', 'laydiesdendb'),
-            'USER': os.getenv('DB_USER', 'laydiesden'),
-            'PASSWORD': os.getenv('DB_PASSWORD', '1234park'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '5432'),
-        }
-    }
+import dj_database_url
+import os
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f"postgres://{os.getenv('DB_USER', 'laydiesden')}:{os.getenv('DB_PASSWORD', '1234park')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'laydiesdendb')}",
+        conn_max_age=600,
+        ssl_require=True
+    )
+}
 
 # -------------------------------------------------
 # PASSWORD VALIDATION
