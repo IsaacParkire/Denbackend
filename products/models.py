@@ -1,4 +1,5 @@
 from django.db import models
+from pyuploadcare.dj.models import ImageField
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -16,7 +17,7 @@ class MainCategory(models.Model):
     slug = models.SlugField(unique=True)
     page = models.CharField(max_length=20, choices=PAGE_CHOICES)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='main_categories/', blank=True, null=True)
+    image = ImageField(blank=True, manual_crop='', null=True)
     icon = models.CharField(max_length=10, blank=True, help_text="Emoji icon for the category")
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0, help_text="Display order")
@@ -36,7 +37,7 @@ class SubCategory(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField()
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='subcategories/', blank=True, null=True)
+    image = ImageField(blank=True, manual_crop='', null=True)
     icon = models.CharField(max_length=10, blank=True, help_text="Emoji icon for the subcategory")
     is_active = models.BooleanField(default=True)
     order = models.PositiveIntegerField(default=0, help_text="Display order within main category")
@@ -55,7 +56,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='categories/', blank=True, null=True)
+    image = ImageField(blank=True, manual_crop='', null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -140,7 +141,7 @@ class Product(models.Model):
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='products/')
+    image = ImageField(blank=True, manual_crop='')
     alt_text = models.CharField(max_length=200, blank=True)
     is_primary = models.BooleanField(default=False)
     order = models.PositiveIntegerField(default=0)

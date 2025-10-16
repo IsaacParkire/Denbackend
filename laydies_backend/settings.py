@@ -47,9 +47,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.apple',
 
     # Cloudinary
-    'cloudinary',
-    'cloudinary_storage',
-
     # Local apps
     'accounts',
     'products',
@@ -60,17 +57,16 @@ INSTALLED_APPS = [
     'appointments',
     'pyuploadcare.dj',
 ]
+
 # -------------------------------------------------
 # UPLOADCARE CONFIGURATION
 # -------------------------------------------------
 UPLOADCARE = {
-    'pub_key': '53ac0443bd91f406e28d',
-    'secret': 'b3577b6a7dabe9376c29',
+    'pub_key': config('UPLOADCARE_PUBLIC_KEY'),
+    'secret': config('UPLOADCARE_SECRET_KEY'),
 }
+DEFAULT_FILE_STORAGE = 'pyuploadcare.dj.models.ImageField'
 
-# -------------------------------------------------
-# MIDDLEWARE
-# -------------------------------------------------
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -241,14 +237,12 @@ ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 
 # -------------------------------------------------
-# CLOUDINARY STORAGE
+# UPLOADCARE STORAGE
 # -------------------------------------------------
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": config("CLOUDINARY_API_KEY"),
-    "API_SECRET": config("CLOUDINARY_API_SECRET"),
+UPLOADCARE = {
+    'pub_key': config('UPLOADCARE_PUBLIC_KEY'),
+    'secret': config('UPLOADCARE_SECRET_KEY'),
 }
+DEFAULT_FILE_STORAGE = 'pyuploadcare.dj.models.ImageField'
 
-
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
