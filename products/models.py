@@ -111,6 +111,10 @@ class Product(models.Model):
     # SEO
     meta_title = models.CharField(max_length=60, blank=True)
     meta_description = models.CharField(max_length=160, blank=True)
+
+    # Uploadcare image field
+    from pyuploadcare.dj.models import ImageField
+    image = ImageField(blank=True, manual_crop='')
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)

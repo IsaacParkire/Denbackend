@@ -58,7 +58,15 @@ INSTALLED_APPS = [
     'cart',
     'payments',
     'appointments',
+    'pyuploadcare.dj',
 ]
+# -------------------------------------------------
+# UPLOADCARE CONFIGURATION
+# -------------------------------------------------
+UPLOADCARE = {
+    'pub_key': '53ac0443bd91f406e28d',
+    'secret': 'b3577b6a7dabe9376c29',
+}
 
 # -------------------------------------------------
 # MIDDLEWARE
@@ -107,9 +115,10 @@ DATABASES = {
         default=f"postgres://{os.getenv('DB_USER', 'laydiesden')}:{os.getenv('DB_PASSWORD', '1234park')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'laydiesdendb')}",
         conn_max_age=600,
         ssl_require=True
+# -------------------------------------------------
     )
 }
-
+# -------------------------------------------------
 # -------------------------------------------------
 # PASSWORD VALIDATION
 # -------------------------------------------------
