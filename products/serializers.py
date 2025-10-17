@@ -49,8 +49,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         request = self.context.get('request')
         if request:
-            return request.build_absolute_uri(obj.image.url)
-        return obj.image.url
+            return request.build_absolute_uri(obj.image.cdn_url)
+        return obj.image.cdn_url
 
 class ProductVariantSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,8 +91,8 @@ class ProductListSerializer(serializers.ModelSerializer):
         if primary_image:
             request = self.context.get('request')
             if request:
-                return request.build_absolute_uri(primary_image.image.url)
-            return primary_image.image.url
+                return request.build_absolute_uri(primary_image.image.cdn_url)
+            return primary_image.image.cdn_url
         return None
     
     def get_average_rating(self, obj):
@@ -160,6 +160,6 @@ class ProductSimpleSerializer(serializers.ModelSerializer):
         if primary_image:
             request = self.context.get('request')
             if request:
-                return request.build_absolute_uri(primary_image.image.url)
-            return primary_image.image.url
+                return request.build_absolute_uri(primary_image.image.cdn_url)
+            return primary_image.image.cdn_url
         return None
