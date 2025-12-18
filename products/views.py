@@ -48,7 +48,7 @@ class ProductListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = [
-        'category', 'main_category', 'sub_category', 'main_category__page',
+        'category', 'main_category', 'sub_category', 'sub_category__slug', 'main_category__page',
         'is_featured', 'is_digital', 'is_exclusive', 'is_limited_edition', 
         'is_bestseller', 'is_new_arrival'
     ]
