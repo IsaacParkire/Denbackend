@@ -138,6 +138,12 @@ class Product(models.Model):
     @property
     def is_low_stock(self):
         return self.stock_quantity <= self.low_stock_threshold
+    
+    def delete(self, *args, **kwargs):
+        # Delete the main product image from Uploadcare before deleting the product
+        if self.image:
+            self.image.delete()
+        super().delete(*args, **kwargs)
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
@@ -151,6 +157,12 @@ class ProductImage(models.Model):
     
     def __str__(self):
         return f"{self.product.name} - Image {self.order}"
+    
+    def delete(self, *args, **kwargs):
+        # Delete the image from Uploadcare before deleting the model instance
+        if self.image:
+            self.image.delete()
+        super().delete(*args, **kwargs)
 
 class ProductVariant(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
