@@ -118,6 +118,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ('created_at', 'updated_at')
     inlines = [ProductImageInline, ProductVariantInline]
+    actions = ['delete_all_products']
     
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
@@ -171,6 +172,15 @@ class ProductAdmin(admin.ModelAdmin):
                 
         return form
 
+    def delete_all_products(self, request, queryset):
+        count = Product.objects.count()
+        if count == 0:
+            self.message_user(request, "No products to delete.")
+            return
+        Product.objects.all().delete()
+        self.message_user(request, f"All {count} products have been deleted.")
+    delete_all_products.short_description = "Delete all products (including images)"
+
     class Media:
         js = ('admin/js/product_category_filter.js',)
 
@@ -180,6 +190,7 @@ class ProductImageAdmin(admin.ModelAdmin):
     list_filter = ('is_primary', 'product__main_category__page', 'product__main_category')
     search_fields = ('product__name', 'alt_text')
     list_editable = ('is_primary', 'order')
+    actions = ['delete_all_images']
     
     def image_preview(self, obj):
         if obj.image:
@@ -189,6 +200,15 @@ class ProductImageAdmin(admin.ModelAdmin):
             )
         return "No Image"
     image_preview.short_description = 'Preview'
+    
+    def delete_all_images(self, request, queryset):
+        count = ProductImage.objects.count()
+        if count == 0:
+            self.message_user(request, "No product images to delete.")
+            return
+        ProductImage.objects.all().delete()
+        self.message_user(request, f"All {count} product images have been deleted.")
+    delete_all_images.short_description = "Delete all product images"
 
 @admin.register(ProductReview)
 class ProductReviewAdmin(admin.ModelAdmin):
