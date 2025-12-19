@@ -1,7 +1,22 @@
-from django.contrib import admin
-from django.utils.html import format_html
-from django.db import models
-from django.forms import Textarea
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+@csrf_exempt
+def get_subcategories_admin(request):
+    """AJAX view to get subcategories for admin form"""
+    main_category_id = request.GET.get('main_category_id')
+    
+    if main_category_id:
+        subcategories = SubCategory.objects.filter(
+            main_category_id=main_category_id, 
+            is_active=True
+        ).values('id', 'name')
+    else:
+        subcategories = SubCategory.objects.filter(is_active=True).values('id', 'name')
+    
+    return JsonResponse(list(subcategories), safe=False)
 from .models import (
     MainCategory, SubCategory, Category, Product, ProductImage, 
     ProductVariant, ProductReview, Wishlist
@@ -118,11 +133,7 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     readonly_fields = ('created_at', 'updated_at')
     inlines = [ProductImageInline, ProductVariantInline]
-    actions = ['delete_all_products']
-    
-    formfield_overrides = {
-        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
-    }
+    autocomplete_fields = ['sub_category']
     
     fieldsets = (
         ('Basic Information', {
@@ -160,17 +171,20 @@ class ProductAdmin(admin.ModelAdmin):
     
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        
-        # Filter subcategories based on selected main category
-        if 'sub_category' in form.base_fields:
-            if obj and obj.main_category:
-                form.base_fields['sub_category'].queryset = SubCategory.objects.filter(
-                    main_category=obj.main_category, is_active=True
+        return form
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'sub_category':
+            # For existing objects, filter by their main category
+            if hasattr(self, '_obj') and self._obj and self._obj.main_category:
+                kwargs['queryset'] = SubCategory.objects.filter(
+                    main_category=self._obj.main_category, is_active=True
                 )
             else:
-                form.base_fields['sub_category'].queryset = SubCategory.objects.none()
-                
-        return form
+                # For new objects, show all active subcategories
+                kwargs['queryset'] = SubCategory.objects.filter(is_active=True)
+        
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def delete_all_products(self, request, queryset):
         count = Product.objects.count()

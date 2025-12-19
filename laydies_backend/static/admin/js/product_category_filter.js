@@ -15,12 +15,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 fetch(`/api/products/sub-categories/?main_category=${mainCategoryId}`)
                     .then(response => response.json())
                     .then(data => {
-                        data.forEach(subCategory => {
-                            const option = document.createElement('option');
-                            option.value = subCategory.id;
-                            option.textContent = subCategory.name;
-                            subCategorySelect.appendChild(option);
-                        });
+                        if (data.results) {
+                            // Paginated response
+                            data.results.forEach(subCategory => {
+                                const option = document.createElement('option');
+                                option.value = subCategory.id;
+                                option.textContent = subCategory.name;
+                                subCategorySelect.appendChild(option);
+                            });
+                        } else {
+                            // Direct array response
+                            data.forEach(subCategory => {
+                                const option = document.createElement('option');
+                                option.value = subCategory.id;
+                                option.textContent = subCategory.name;
+                                subCategorySelect.appendChild(option);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching subcategories:', error);
+                        // Fallback: show all subcategories
+                        fetch('/api/products/sub-categories/')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.results) {
+                                    data.results.forEach(subCategory => {
+                                        const option = document.createElement('option');
+                                        option.value = subCategory.id;
+                                        option.textContent = subCategory.name;
+                                        subCategorySelect.appendChild(option);
+                                    });
+                                } else {
+                                    data.forEach(subCategory => {
+                                        const option = document.createElement('option');
+                                        option.value = subCategory.id;
+                                        option.textContent = subCategory.name;
+                                        subCategorySelect.appendChild(option);
+                                    });
+                                }
+                            })
+                            .catch(error => console.error('Error fetching all subcategories:', error));
+                    });
+            } else {
+                // If no main category selected, show all subcategories
+                fetch('/api/products/sub-categories/')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.results) {
+                            data.results.forEach(subCategory => {
+                                const option = document.createElement('option');
+                                option.value = subCategory.id;
+                                option.textContent = subCategory.name;
+                                subCategorySelect.appendChild(option);
+                            });
+                        } else {
+                            data.forEach(subCategory => {
+                                const option = document.createElement('option');
+                                option.value = subCategory.id;
+                                option.textContent = subCategory.name;
+                                subCategorySelect.appendChild(option);
+                            });
+                        }
                     })
                     .catch(error => console.error('Error fetching subcategories:', error));
             }
@@ -30,6 +86,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update on page load if main category is already selected
         if (mainCategoryField.value) {
+            updateSubCategories();
+        } else {
+            // Show all subcategories initially
             updateSubCategories();
         }
     }

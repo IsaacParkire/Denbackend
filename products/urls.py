@@ -9,7 +9,9 @@ from .views import (
     ProductReviewListCreateView,
     WishlistView,
     WishlistRemoveView,
-    product_search
+    product_search,
+    seed_subcategories,
+    get_subcategories_for_admin
 )
 
 urlpatterns = [
@@ -19,8 +21,10 @@ urlpatterns = [
     path('', ProductListView.as_view(), name='product-list'),
     path('featured/', FeaturedProductsView.as_view(), name='featured-products'),
     path('search/', product_search, name='product-search'),
-    path('<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
+    path('seed-subcategories/', seed_subcategories, name='seed-subcategories'),
+    path('admin-subcategories/', get_subcategories_for_admin, name='admin-subcategories'),
     path('<int:product_id>/reviews/', ProductReviewListCreateView.as_view(), name='product-reviews'),
     path('wishlist/', WishlistView.as_view(), name='wishlist'),
     path('wishlist/remove/<int:product_id>/', WishlistRemoveView.as_view(), name='wishlist-remove'),
+    path('<slug:slug>/', ProductDetailView.as_view(), name='product-detail'),
 ]
