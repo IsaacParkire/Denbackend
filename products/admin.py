@@ -1,22 +1,14 @@
+from django.contrib import admin
+from django.utils.html import format_html
+from django.db import models
+from django.forms import Textarea
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
-
-@staff_member_required
-@csrf_exempt
-def get_subcategories_admin(request):
-    """AJAX view to get subcategories for admin form"""
-    main_category_id = request.GET.get('main_category_id')
-    
-    if main_category_id:
-        subcategories = SubCategory.objects.filter(
-            main_category_id=main_category_id, 
-            is_active=True
-        ).values('id', 'name')
-    else:
-        subcategories = SubCategory.objects.filter(is_active=True).values('id', 'name')
-    
-    return JsonResponse(list(subcategories), safe=False)
+from .models import (
+    MainCategory, SubCategory, Category, Product, ProductImage,
+    ProductVariant, ProductReview, Wishlist
+)
 from .models import (
     MainCategory, SubCategory, Category, Product, ProductImage, 
     ProductVariant, ProductReview, Wishlist
@@ -236,3 +228,19 @@ class WishlistAdmin(admin.ModelAdmin):
     list_display = ('user', 'product', 'created_at')
     list_filter = ('created_at', 'product__main_category__page', 'product__main_category')
     search_fields = ('user__email', 'product__name')
+
+@staff_member_required
+@csrf_exempt
+def get_subcategories_admin(request):
+    """AJAX view to get subcategories for admin form"""
+    main_category_id = request.GET.get('main_category_id')
+
+    if main_category_id:
+        subcategories = SubCategory.objects.filter(
+            main_category_id=main_category_id,
+            is_active=True
+        ).values('id', 'name')
+    else:
+        subcategories = SubCategory.objects.filter(is_active=True).values('id', 'name')
+
+    return JsonResponse(list(subcategories), safe=False)
